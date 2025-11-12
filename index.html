@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Document Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f172a, #1e293b); }
+    .folder, .file-card { transition: all 0.25s ease; }
+    .folder:hover, .file-card:hover { transform: scale(1.04); box-shadow: 0 12px 25px rgba(255,255,255,0.18); }
+    .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+  </style>
+</head>
+<body class="min-h-screen text-white flex flex-col items-center">
+  <!-- Header -->
+  <header class="py-6 text-center">
+    <h1 class="text-4xl font-bold tracking-wide">📂 Premium Document Hub</h1>
+    <p class="text-gray-300 mt-2">Click any folder to view your documents</p>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="w-full max-w-4xl px-6 mb-8">
+    <input id="searchInput" type="text" placeholder="Search files..."
+      class="w-full p-3 rounded-xl text-black font-medium focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <!-- Folder Section -->
+  <div id="folder-section" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 max-w-6xl">
+    <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('pdf')">
+      <div class="text-6xl mb-4">📕</div>
+      <h2 class="text-xl font-semibold mb-2">PDF Files</h2>
+      <p class="text-gray-400" id="pdf-count">0 Files</p>
+    </div>
+    <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('doc')">
+      <div class="text-6xl mb-4">📘</div>
+      <h2 class="text-xl font-semibold mb-2">DOC Files</h2>
+      <p class="text-gray-400" id="doc-count">0 Files</p>
+    </div>
+    <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('all')">
+      <div class="text-6xl mb-4">📂</div>
+      <h2 class="text-xl font-semibold mb-2">All in One</h2>
+      <p class="text-gray-400">PDF & DOC Files</p>
+    </div>
+    <!-- New "Images" Folder -->
+    <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('images')">
+      <div class="text-6xl mb-4">🖼️</div>
+      <h2 class="text-xl font-semibold mb-2">Images</h2>
+      <p class="text-gray-400">Screenshots & Images</p>
+    </div>
+  </div>
+
+  <!-- File List Section -->
+  <div id="file-list-section" class="hidden flex-col items-center mt-10 px-6 max-w-6xl w-full">
+    <button onclick="goBack()" class="self-start mb-6 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">⬅️ Back to Folders</button>
+    <h2 id="file-title" class="text-3xl font-bold mb-6"></h2>
+    <div id="file-container" class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 w-full max-h-[70vh] overflow-y-auto"></div>
+  </div>
+
+  
+
+  <!-- Footer -->
+  <footer class="mt-20 mb-6 text-gray-400 text-sm">© 2025 Premium Document Hub | Designed by You 💎</footer>
+
+  <script>
+    const files = {
+      pdf: [
+        { name: "IMG_4607.pdf", url: "files/pdf/IMG_4607.pdf" },
+        { name: "IMG_4608.pdf", url: "files/pdf/IMG_4608.pdf" },
+        { name: "IMG_4609.pdf", url: "files/pdf/IMG_4609.pdf" },
+      ],
+      doc: [
+        { name: "IMG_4607.docx", url: "files/doc/IMG_4607.docx" },
+        { name: "IMG_4608.docx", url: "files/doc/IMG_4608.docx" },
+        { name: "IMG_4609.docx", url: "files/doc/IMG_4609.docx" },
+      ],
+      all: [
+        { name: "IMG_4607.pdf", url: "files/pdf/IMG_4607.pdf" },
+        { name: "IMG_4608.pdf", url: "files/pdf/IMG_4608.pdf" },
+        { name: "IMG_4609.pdf", url: "files/pdf/IMG_4609.pdf" },
+        { name: "IMG_4607.docx", url: "files/doc/IMG_4607.docx" },
+        { name: "IMG_4608.docx", url: "files/doc/IMG_4608.docx" },
+        { name: "IMG_4609.docx", url: "files/doc/IMG_4609.docx" },
+      ],
+      images: [
+        { name: "screenshot1.jpg", url: "files/images/screenshot1.jpg" },
+        { name: "screenshot2.jpg", url: "files/images/screenshot2.jpg" },
+        // Add more image files here
+      ]
+    };
+
+    const folderSection = document.getElementById('folder-section');
+    const fileSection = document.getElementById('file-list-section');
+    const fileContainer = document.getElementById('file-container');
+    const fileTitle = document.getElementById('file-title');
+    const searchInput = document.getElementById('searchInput');
+    const pdfCount = document.getElementById('pdf-count');
+    const docCount = document.getElementById('doc-count');
+    const imageSection = document.getElementById('image-section');
+    const imageInput = document.getElementById('imageInput');
+    const imageContainer = document.getElementById('image-container');
+
+    // Show counts
+    pdfCount.textContent = `${files.pdf.length} Files`;
+    docCount.textContent = `${files.doc.length} Files`;
+
+    let currentType = '';
+    let currentList = [];
+
+    function openFolder(type) {
+      currentType = type;
+      currentList = files[type] || [];
+      folderSection.classList.add('hidden');
+      fileSection.classList.remove('hidden');
+      fileTitle.innerText = type.toUpperCase() + ' Files';
+      renderFiles(currentList);
+
+      // Show image section only if "images" folder is selected
+      if (type === 'images') {
+        imageSection.classList.remove('hidden');
+      } else {
+        imageSection.classList.add('hidden');
+      }
+    }
+
+    function renderFiles(list) {
+      fileContainer.innerHTML = '';
+      if (!Array.isArray(list) || list.length === 0) {
+        fileContainer.innerHTML = '<p class="text-gray-300">No files found.</p>';
+        return;
+      }
+      list.forEach((file) => {
+        const card = document.createElement('div');
+        card.className = 'file-card glass p-5 rounded-xl flex flex-col justify-between';
+        card.innerHTML = `
+          <div class="flex items-center mb-3">
+            <span class="text-3xl mr-3">${currentType === 'pdf' ? '📄' : currentType === 'doc' ? '📝' : '🖼️'}</span>
+            <p class="font-medium text-white truncate" title="${file.name}">${file.name}</p>
+          </div>
+          <a href="${file.url}" target="_blank" rel="noopener noreferrer"
+             class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">View</a>
+        `;
+        fileContainer.appendChild(card);
+      });
+    }
+
+    function goBack() {
+      fileSection.classList.add('hidden');
+      folderSection.classList.remove('hidden');
+      searchInput.value = '';
+      currentType = '';
+      currentList = [];
+    }
+
+    // Search functionality — only when a folder is open
+    searchInput.addEventListener('input', () => {
+      if (!currentType) return; // guard until a folder is selected
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = q ? currentList.filter(f => f.name.toLowerCase().includes(q)) : currentList;
+      renderFiles(filtered);
+    });
+
+    // Image upload functionality
+    imageInput.addEventListener('change', function(event) {
+      const files = event.target.files;
+      if (files) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.className = 'w-32 h-32 object-cover rounded-lg';
+          imageContainer.appendChild(img);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
