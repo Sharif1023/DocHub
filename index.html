@@ -16,7 +16,7 @@
 <body class="min-h-screen text-white flex flex-col items-center">
   <!-- Header -->
   <header class="py-6 text-center">
-    <h1 class="text-4xl font-bold tracking-wide">📂 Premium Document Hub</h1>
+    <h1 class="text-4xl font-bold tracking-wide">📂 Document Hub</h1>
     <p class="text-gray-300 mt-2">Click any folder to view your documents</p>
   </header>
 
@@ -35,13 +35,13 @@
     <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('all')">
       <div class="text-6xl mb-4">📂</div>
       <h2 class="text-xl font-semibold mb-2">All in One</h2>
-      <p class="text-gray-400">PDF & DOC Files</p>
+      <p class="text-gray-400">PDF, DOC & ZIP Files</p>
     </div>
     <!-- "Images" Folder -->
     <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('images')">
       <div class="text-6xl mb-4">🖼️</div>
-      <h2 class="text-xl font-semibold mb-2">Images</h2>
-      <p class="text-gray-400">All Project Images</p>
+      <h2 class="text-xl font-semibold mb-2">All Images</h2>
+      <p class="text-gray-400" id="image-count">0 Files</p>
     </div>
   </div>
 
@@ -49,7 +49,9 @@
   <div id="file-list-section" class="hidden flex-col items-center mt-10 px-6 max-w-6xl w-full">
     <button onclick="goBack()" class="self-start mb-6 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">⬅️ Back to Folders</button>
     <h2 id="file-title" class="text-3xl font-bold mb-6"></h2>
-    <div id="file-container" class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 w-full max-h-[70vh] overflow-y-auto"></div>
+
+    <!-- Mobile: 2 per row; md: 3 per row -->
+    <div id="file-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-h-[70vh] overflow-y-auto"></div>
   </div>
 
   <!-- Image Viewer Modal -->
@@ -81,30 +83,51 @@
     </div>
   </div>
 
-  <!-- Floating Contact Widget -->
-  <div class="fixed bottom-6 right-6 z-30">
-    <div class="glass rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
-      <span class="text-sm font-medium text-gray-200 mr-1">Contact</span>
-      <!-- WhatsApp -->
-      <a href="https://wa.me/8801316785389" target="_blank" rel="noopener noreferrer"
-         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
-         style="background: #25D366;">
-        <span class="text-white">W</span>
-      </a>
-      <!-- Telegram -->
-      <a href="https://t.me/Sharunduu18" target="_blank" rel="noopener noreferrer"
-         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
-         style="background: #229ED9;">
-        <span class="text-white">T</span>
-      </a>
-      <!-- Gmail -->
-      <a href="mailto:sharifislam02001@gmail.com"
-         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
-         style="background: #EA4335;">
-        <span class="text-white">G</span>
-      </a>
-    </div>
+
+
+
+  
+ <!-- Floating Contact Widget -->
+<div class="fixed bottom-6 right-6 z-30">
+  <div class="glass rounded-2xl px-4 py-3 shadow-xl flex items-center
+              sm:scale-100 scale-85 sm:gap-3 gap-1.5">
+
+    <!-- Text -->
+    <span class="font-medium text-gray-200 mr-1
+                 sm:text-sm text-[10px]">
+      Contact Me
+    </span>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/8801316785389" target="_blank"
+       class="rounded-full flex items-center justify-center font-bold shadow-md text-white
+              sm:w-10 sm:h-10 w-7 h-7 sm:text-lg text-[10px]"
+       style="background:#25D366;">
+      W
+    </a>
+
+    <!-- Telegram -->
+    <a href="https://t.me/Sharunduu18" target="_blank"
+       class="rounded-full flex items-center justify-center font-bold shadow-md text-white
+              sm:w-10 sm:h-10 w-7 h-7 sm:text-lg text-[10px]"
+       style="background:#229ED9;">
+      T
+    </a>
+
+    <!-- Gmail -->
+    <a href="mailto:sharifislam02001@gmail.com"
+       class="rounded-full flex items-center justify-center font-bold shadow-md text-white
+              sm:w-10 sm:h-10 w-7 h-7 sm:text-lg text-[10px]"
+       style="background:#EA4335;">
+      G
+    </a>
+
   </div>
+</div>
+
+
+
+
 
   <script>
     const files = {
@@ -145,24 +168,22 @@
       all: [
         { name: "All in One (demo).docx", url: "files/All/All in One (demo).docx" },
         { name: "All in One (demo).pdf", url: "files/All/All in One (demo).pdf" },
-       
         { name: "All in One (black font) (demo).docx", url: "files/All/All in One (black font) (demo).docx" },
         { name: "All in One (black font) (demo).pdf", url: "files/All/All in One (black font) (demo).pdf" },
+        <!-- 🔽 Example ZIP file in All folder -->
+        { name: "All_Docs_and_PDFs.zip", url: "files/All/All_Docs_and_PDFs.zip.zip" },
+        { name: "Separately pdf.zip", url: "files/All/Separately pdf.zip" },
+        { name: "Separately docx.zip", url: "files/All/Separately docx.zip" },
       ],
 
-
-
-
-
-
       images: [
-  { name: "IMG_4607.jpeg", url: "files/img/IMG_4607.jpeg" },
-  { name: "IMG_4608.jpeg", url: "files/img/IMG_4608.jpeg" },
-  { name: "IMG_4609.jpeg", url: "files/img/IMG_4609.jpeg" },
-  { name: "IMG_4610.jpeg", url: "files/img/IMG_4610.jpeg" },
-  { name: "IMG_4611.jpeg", url: "files/img/IMG_4611.jpeg" },
-  { name: "IMG_4612.jpeg", url: "files/img/IMG_4612.jpeg" },
-  { name: "IMG_4613.jpeg", url: "files/img/IMG_4613.jpeg" },
+        { name: "IMG_4607.jpeg", url: "files/img/IMG_4607.jpeg" },
+        { name: "IMG_4608.jpeg", url: "files/img/IMG_4608.jpeg" },
+        { name: "IMG_4609.jpeg", url: "files/img/IMG_4609.jpeg" },
+        { name: "IMG_4610.jpeg", url: "files/img/IMG_4610.jpeg" },
+        { name: "IMG_4611.jpeg", url: "files/img/IMG_4611.jpeg" },
+        { name: "IMG_4612.jpeg", url: "files/img/IMG_4612.jpeg" },
+        { name: "IMG_4613.jpeg", url: "files/img/IMG_4613.jpeg" },
   { name: "IMG_4614.jpeg", url: "files/img/IMG_4614.jpeg" },
   { name: "IMG_4615.jpeg", url: "files/img/IMG_4615.jpeg" },
   { name: "IMG_4616.jpeg", url: "files/img/IMG_4616.jpeg" },
@@ -354,16 +375,8 @@
   { name: "IMG_4802.jpeg", url: "files/img/IMG_4802.jpeg" },
   { name: "IMG_4803.jpeg", url: "files/img/IMG_4803.jpeg" },
   { name: "IMG_4804.jpeg", url: "files/img/IMG_4804.jpeg" }
+
       ]
-
-
-
-
-
-
-
-
-
     };
 
     const folderSection = document.getElementById('folder-section');
@@ -372,6 +385,7 @@
     const fileTitle = document.getElementById('file-title');
     const pdfCount = document.getElementById('pdf-count');
     const docCount = document.getElementById('doc-count');
+    const imageCount = document.getElementById('image-count');
 
     // Optional unused elements
     const imageSection = document.getElementById('image-section');
@@ -380,6 +394,7 @@
 
     pdfCount.textContent = `${files.pdf.length} Files`;
     docCount.textContent = `${files.doc.length} Files`;
+    imageCount.textContent = `${files.images.length} Files`;
 
     let currentType = '';
     let currentList = [];
@@ -411,10 +426,20 @@
         const card = document.createElement('div');
         card.className = 'file-card glass p-5 rounded-xl flex flex-col justify-between';
 
-        const icon =
-          currentType === 'pdf' ? '📄' :
-          currentType === 'doc' ? '📝' :
-          '🖼️';
+        const lowerName = file.name.toLowerCase();
+        let icon = '📁';
+
+        if (currentType === 'pdf') {
+          icon = '📄';
+        } else if (currentType === 'doc') {
+          icon = '📝';
+        } else if (currentType === 'images') {
+          icon = '🖼️';
+        } else if (currentType === 'all') {
+          if (lowerName.endsWith('.zip')) icon = '📦';
+          else if (lowerName.endsWith('.pdf')) icon = '📄';
+          else if (lowerName.endsWith('.doc') || lowerName.endsWith('.docx')) icon = '📝';
+        }
 
         let actionButton = '';
 
@@ -431,6 +456,13 @@
               class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">
               View
             </button>
+          `;
+        } else if (currentType === 'all' && lowerName.endsWith('.zip')) {
+          actionButton = `
+            <a href="${file.url}" download
+               class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">
+              Download ZIP
+            </a>
           `;
         } else {
           actionButton = `
