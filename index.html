@@ -20,12 +20,6 @@
     <p class="text-gray-300 mt-2">Click any folder to view your documents</p>
   </header>
 
-  <!-- Search Bar -->
-  <div class="w-full max-w-4xl px-6 mb-8">
-    <input id="searchInput" type="text" placeholder="Search files..."
-      class="w-full p-3 rounded-xl text-black font-medium focus:outline-none focus:ring-2 focus:ring-blue-500" />
-  </div>
-
   <!-- Folder Section -->
   <div id="folder-section" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 max-w-6xl">
     <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('pdf')">
@@ -43,11 +37,11 @@
       <h2 class="text-xl font-semibold mb-2">All in One</h2>
       <p class="text-gray-400">PDF & DOC Files</p>
     </div>
-    <!-- New "Images" Folder -->
+    <!-- "Images" Folder -->
     <div class="folder glass rounded-2xl p-6 text-center cursor-pointer" onclick="openFolder('images')">
       <div class="text-6xl mb-4">🖼️</div>
       <h2 class="text-xl font-semibold mb-2">Images</h2>
-      <p class="text-gray-400">Screenshots & Images</p>
+      <p class="text-gray-400">All Project Images</p>
     </div>
   </div>
 
@@ -58,55 +52,338 @@
     <div id="file-container" class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 w-full max-h-[70vh] overflow-y-auto"></div>
   </div>
 
-  
+  <!-- Image Viewer Modal -->
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <button onclick="closeImageViewer()"
+            class="absolute top-6 right-8 text-3xl font-bold text-white hover:scale-110 transition">
+      ✕
+    </button>
+    <button onclick="showPrevImage()"
+            class="absolute left-6 md:left-10 text-4xl text-white font-bold hover:scale-110 transition select-none">
+      ❮
+    </button>
+    <img id="modalImage" src="" alt="Preview"
+         class="max-h-[80vh] max-w-[80vw] rounded-2xl shadow-2xl object-contain" />
+    <button onclick="showNextImage()"
+            class="absolute right-6 md:right-10 text-4xl text-white font-bold hover:scale-110 transition select-none">
+      ❯
+    </button>
+  </div>
 
-  <!-- Footer -->
-  <footer class="mt-20 mb-6 text-gray-400 text-sm">© 2025 Premium Document Hub | Designed by You 💎</footer>
+  <!-- PDF Viewer Modal (same page) -->
+  <div id="pdfModal" class="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-40 hidden">
+    <button onclick="closePdfViewer()"
+            class="absolute top-6 right-8 text-3xl font-bold text-white hover:scale-110 transition">
+      ✕
+    </button>
+    <div class="w-[90vw] h-[85vh] bg-gray-900 rounded-2xl overflow-hidden shadow-2xl">
+      <iframe id="pdfFrame" src="" class="w-full h-full" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <!-- Floating Contact Widget -->
+  <div class="fixed bottom-6 right-6 z-30">
+    <div class="glass rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
+      <span class="text-sm font-medium text-gray-200 mr-1">Contact</span>
+      <!-- WhatsApp -->
+      <a href="https://wa.me/8801316785389" target="_blank" rel="noopener noreferrer"
+         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
+         style="background: #25D366;">
+        <span class="text-white">W</span>
+      </a>
+      <!-- Telegram -->
+      <a href="https://t.me/Sharunduu18" target="_blank" rel="noopener noreferrer"
+         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
+         style="background: #229ED9;">
+        <span class="text-white">T</span>
+      </a>
+      <!-- Gmail -->
+      <a href="mailto:sharifislam02001@gmail.com"
+         class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-md"
+         style="background: #EA4335;">
+        <span class="text-white">G</span>
+      </a>
+    </div>
+  </div>
 
   <script>
     const files = {
       pdf: [
-        { name: "IMG_4607.pdf", url: "files/pdf/IMG_4607.pdf" },
-        { name: "IMG_4608.pdf", url: "files/pdf/IMG_4608.pdf" },
-        { name: "IMG_4609.pdf", url: "files/pdf/IMG_4609.pdf" },
+        { name: "IMG_4607.pdf", url: "files/pdf/IMG_4607.jpeg.pdf" },
+        { name: "IMG_4608.pdf", url: "files/pdf/IMG_4608.jpeg.pdf" },
+        { name: "IMG_4609.pdf", url: "files/pdf/IMG_4609.jpeg.pdf" },
+        { name: "IMG_4610.pdf", url: "files/pdf/IMG_4610.jpeg.pdf" },
+        { name: "IMG_4611.pdf", url: "files/pdf/IMG_4611.jpeg.pdf" },
+        { name: "IMG_4612.pdf", url: "files/pdf/IMG_4612.jpeg.pdf" },
+        { name: "IMG_4613.pdf", url: "files/pdf/IMG_4613.jpeg.pdf" },
+        { name: "IMG_4614.pdf", url: "files/pdf/IMG_4614.jpeg.pdf" },
+        { name: "IMG_4615.pdf", url: "files/pdf/IMG_4615.jpeg.pdf" },
+        { name: "IMG_4616.pdf", url: "files/pdf/IMG_4616.jpeg.pdf" },
+        { name: "IMG_4617.pdf", url: "files/pdf/IMG_4617.jpeg.pdf" },
+        { name: "IMG_4618.pdf", url: "files/pdf/IMG_4618.jpeg.pdf" },
+        { name: "IMG_4619.pdf", url: "files/pdf/IMG_4619.jpeg.pdf" },
+        { name: "IMG_4620.pdf", url: "files/pdf/IMG_4620.jpeg.pdf" },
       ],
+
       doc: [
-        { name: "IMG_4607.docx", url: "files/doc/IMG_4607.docx" },
-        { name: "IMG_4608.docx", url: "files/doc/IMG_4608.docx" },
-        { name: "IMG_4609.docx", url: "files/doc/IMG_4609.docx" },
+        { name: "IMG_4607.docx", url: "files/doc/IMG_4607.jpeg.docx" },
+        { name: "IMG_4608.docx", url: "files/doc/IMG_4608.jpeg.docx" },
+        { name: "IMG_4609.docx", url: "files/doc/IMG_4609.jpeg.docx" },
+        { name: "IMG_4610.docx", url: "files/doc/IMG_4610.jpeg.docx" },
+        { name: "IMG_4611.docx", url: "files/doc/IMG_4611.jpeg.docx" },
+        { name: "IMG_4612.docx", url: "files/doc/IMG_4612.jpeg.docx" },
+        { name: "IMG_4613.docx", url: "files/doc/IMG_4613.jpeg.docx" },
+        { name: "IMG_4614.docx", url: "files/doc/IMG_4614.jpeg.docx" },
+        { name: "IMG_4615.docx", url: "files/doc/IMG_4615.jpeg.docx" },
+        { name: "IMG_4616.docx", url: "files/doc/IMG_4616.jpeg.docx" },
+        { name: "IMG_4617.docx", url: "files/doc/IMG_4617.jpeg.docx" },
+        { name: "IMG_4618.docx", url: "files/doc/IMG_4618.jpeg.docx" },
+        { name: "IMG_4619.docx", url: "files/doc/IMG_4619.jpeg.docx" },
+        { name: "IMG_4620.docx", url: "files/doc/IMG_4620.jpeg.docx" },
       ],
+
       all: [
-        { name: "IMG_4607.pdf", url: "files/pdf/IMG_4607.pdf" },
-        { name: "IMG_4608.pdf", url: "files/pdf/IMG_4608.pdf" },
-        { name: "IMG_4609.pdf", url: "files/pdf/IMG_4609.pdf" },
-        { name: "IMG_4607.docx", url: "files/doc/IMG_4607.docx" },
-        { name: "IMG_4608.docx", url: "files/doc/IMG_4608.docx" },
-        { name: "IMG_4609.docx", url: "files/doc/IMG_4609.docx" },
+        { name: "All in One (demo).docx", url: "files/All/All in One (demo).docx" },
+        { name: "All in One (demo).pdf", url: "files/All/All in One (demo).pdf" },
+       
+        { name: "All in One (black font) (demo).docx", url: "files/All/All in One (black font) (demo).docx" },
+        { name: "All in One (black font) (demo).pdf", url: "files/All/All in One (black font) (demo).pdf" },
       ],
+
+
+
+
+
+
       images: [
-        { name: "screenshot1.jpg", url: "files/images/screenshot1.jpg" },
-        { name: "screenshot2.jpg", url: "files/images/screenshot2.jpg" },
-        // Add more image files here
+  { name: "IMG_4607.jpeg", url: "files/img/IMG_4607.jpeg" },
+  { name: "IMG_4608.jpeg", url: "files/img/IMG_4608.jpeg" },
+  { name: "IMG_4609.jpeg", url: "files/img/IMG_4609.jpeg" },
+  { name: "IMG_4610.jpeg", url: "files/img/IMG_4610.jpeg" },
+  { name: "IMG_4611.jpeg", url: "files/img/IMG_4611.jpeg" },
+  { name: "IMG_4612.jpeg", url: "files/img/IMG_4612.jpeg" },
+  { name: "IMG_4613.jpeg", url: "files/img/IMG_4613.jpeg" },
+  { name: "IMG_4614.jpeg", url: "files/img/IMG_4614.jpeg" },
+  { name: "IMG_4615.jpeg", url: "files/img/IMG_4615.jpeg" },
+  { name: "IMG_4616.jpeg", url: "files/img/IMG_4616.jpeg" },
+  { name: "IMG_4617.jpeg", url: "files/img/IMG_4617.jpeg" },
+  { name: "IMG_4618.jpeg", url: "files/img/IMG_4618.jpeg" },
+  { name: "IMG_4619.jpeg", url: "files/img/IMG_4619.jpeg" },
+  { name: "IMG_4620.jpeg", url: "files/img/IMG_4620.jpeg" },
+  { name: "IMG_4621.jpeg", url: "files/img/IMG_4621.jpeg" },
+  { name: "IMG_4622.jpeg", url: "files/img/IMG_4622.jpeg" },
+  { name: "IMG_4623.jpeg", url: "files/img/IMG_4623.jpeg" },
+  { name: "IMG_4624.jpeg", url: "files/img/IMG_4624.jpeg" },
+  { name: "IMG_4625.jpeg", url: "files/img/IMG_4625.jpeg" },
+  { name: "IMG_4626.jpeg", url: "files/img/IMG_4626.jpeg" },
+  { name: "IMG_4627.jpeg", url: "files/img/IMG_4627.jpeg" },
+  { name: "IMG_4628.jpeg", url: "files/img/IMG_4628.jpeg" },
+  { name: "IMG_4629.jpeg", url: "files/img/IMG_4629.jpeg" },
+  { name: "IMG_4630.jpeg", url: "files/img/IMG_4630.jpeg" },
+  { name: "IMG_4631.jpeg", url: "files/img/IMG_4631.jpeg" },
+  { name: "IMG_4632.jpeg", url: "files/img/IMG_4632.jpeg" },
+  { name: "IMG_4633.jpeg", url: "files/img/IMG_4633.jpeg" },
+  { name: "IMG_4634.jpeg", url: "files/img/IMG_4634.jpeg" },
+  { name: "IMG_4635.jpeg", url: "files/img/IMG_4635.jpeg" },
+  { name: "IMG_4636.jpeg", url: "files/img/IMG_4636.jpeg" },
+  { name: "IMG_4637.jpeg", url: "files/img/IMG_4637.jpeg" },
+  { name: "IMG_4638.jpeg", url: "files/img/IMG_4638.jpeg" },
+  { name: "IMG_4639.jpeg", url: "files/img/IMG_4639.jpeg" },
+  { name: "IMG_4640.jpeg", url: "files/img/IMG_4640.jpeg" },
+  { name: "IMG_4641.jpeg", url: "files/img/IMG_4641.jpeg" },
+  { name: "IMG_4642.jpeg", url: "files/img/IMG_4642.jpeg" },
+  { name: "IMG_4643.jpeg", url: "files/img/IMG_4643.jpeg" },
+  { name: "IMG_4644.jpeg", url: "files/img/IMG_4644.jpeg" },
+  { name: "IMG_4645.jpeg", url: "files/img/IMG_4645.jpeg" },
+  { name: "IMG_4646.jpeg", url: "files/img/IMG_4646.jpeg" },
+  { name: "IMG_4647.jpeg", url: "files/img/IMG_4647.jpeg" },
+  { name: "IMG_4648.jpeg", url: "files/img/IMG_4648.jpeg" },
+  { name: "IMG_4649.jpeg", url: "files/img/IMG_4649.jpeg" },
+  { name: "IMG_4650.jpeg", url: "files/img/IMG_4650.jpeg" },
+  { name: "IMG_4651.jpeg", url: "files/img/IMG_4651.jpeg" },
+  { name: "IMG_4652.jpeg", url: "files/img/IMG_4652.jpeg" },
+  { name: "IMG_4653.jpeg", url: "files/img/IMG_4653.jpeg" },
+  { name: "IMG_4654.jpeg", url: "files/img/IMG_4654.jpeg" },
+  { name: "IMG_4655.jpeg", url: "files/img/IMG_4655.jpeg" },
+  { name: "IMG_4656.jpeg", url: "files/img/IMG_4656.jpeg" },
+  { name: "IMG_4657.jpeg", url: "files/img/IMG_4657.jpeg" },
+  { name: "IMG_4658.jpeg", url: "files/img/IMG_4658.jpeg" },
+  { name: "IMG_4659.jpeg", url: "files/img/IMG_4659.jpeg" },
+  { name: "IMG_4660.jpeg", url: "files/img/IMG_4660.jpeg" },
+  { name: "IMG_4661.jpeg", url: "files/img/IMG_4661.jpeg" },
+  { name: "IMG_4662.jpeg", url: "files/img/IMG_4662.jpeg" },
+  { name: "IMG_4663.jpeg", url: "files/img/IMG_4663.jpeg" },
+  { name: "IMG_4664.jpeg", url: "files/img/IMG_4664.jpeg" },
+  { name: "IMG_4665.jpeg", url: "files/img/IMG_4665.jpeg" },
+  { name: "IMG_4666.jpeg", url: "files/img/IMG_4666.jpeg" },
+  { name: "IMG_4667.jpeg", url: "files/img/IMG_4667.jpeg" },
+  { name: "IMG_4668.jpeg", url: "files/img/IMG_4668.jpeg" },
+  { name: "IMG_4669.jpeg", url: "files/img/IMG_4669.jpeg" },
+  { name: "IMG_4670.jpeg", url: "files/img/IMG_4670.jpeg" },
+  { name: "IMG_4671.jpeg", url: "files/img/IMG_4671.jpeg" },
+  { name: "IMG_4672.jpeg", url: "files/img/IMG_4672.jpeg" },
+  { name: "IMG_4673.jpeg", url: "files/img/IMG_4673.jpeg" },
+  { name: "IMG_4674.jpeg", url: "files/img/IMG_4674.jpeg" },
+  { name: "IMG_4675.jpeg", url: "files/img/IMG_4675.jpeg" },
+  { name: "IMG_4676.jpeg", url: "files/img/IMG_4676.jpeg" },
+  { name: "IMG_4677.jpeg", url: "files/img/IMG_4677.jpeg" },
+  { name: "IMG_4678.jpeg", url: "files/img/IMG_4678.jpeg" },
+  { name: "IMG_4679.jpeg", url: "files/img/IMG_4679.jpeg" },
+  { name: "IMG_4680.jpeg", url: "files/img/IMG_4680.jpeg" },
+  { name: "IMG_4681.jpeg", url: "files/img/IMG_4681.jpeg" },
+  { name: "IMG_4682.jpeg", url: "files/img/IMG_4682.jpeg" },
+  { name: "IMG_4683.jpeg", url: "files/img/IMG_4683.jpeg" },
+  { name: "IMG_4684.jpeg", url: "files/img/IMG_4684.jpeg" },
+  { name: "IMG_4685.jpeg", url: "files/img/IMG_4685.jpeg" },
+  { name: "IMG_4686.jpeg", url: "files/img/IMG_4686.jpeg" },
+  { name: "IMG_4687.jpeg", url: "files/img/IMG_4687.jpeg" },
+  { name: "IMG_4688.jpeg", url: "files/img/IMG_4688.jpeg" },
+  { name: "IMG_4689.jpeg", url: "files/img/IMG_4689.jpeg" },
+  { name: "IMG_4690.jpeg", url: "files/img/IMG_4690.jpeg" },
+  { name: "IMG_4691.jpeg", url: "files/img/IMG_4691.jpeg" },
+  { name: "IMG_4692.jpeg", url: "files/img/IMG_4692.jpeg" },
+  { name: "IMG_4693.jpeg", url: "files/img/IMG_4693.jpeg" },
+  { name: "IMG_4694.jpeg", url: "files/img/IMG_4694.jpeg" },
+  { name: "IMG_4695.jpeg", url: "files/img/IMG_4695.jpeg" },
+  { name: "IMG_4696.jpeg", url: "files/img/IMG_4696.jpeg" },
+  { name: "IMG_4697.jpeg", url: "files/img/IMG_4697.jpeg" },
+  { name: "IMG_4698.jpeg", url: "files/img/IMG_4698.jpeg" },
+  { name: "IMG_4699.jpeg", url: "files/img/IMG_4699.jpeg" },
+  { name: "IMG_4700.jpeg", url: "files/img/IMG_4700.jpeg" },
+  { name: "IMG_4701.jpeg", url: "files/img/IMG_4701.jpeg" },
+  { name: "IMG_4702.jpeg", url: "files/img/IMG_4702.jpeg" },
+  { name: "IMG_4703.jpeg", url: "files/img/IMG_4703.jpeg" },
+  { name: "IMG_4704.jpeg", url: "files/img/IMG_4704.jpeg" },
+  { name: "IMG_4705.jpeg", url: "files/img/IMG_4705.jpeg" },
+  { name: "IMG_4706.jpeg", url: "files/img/IMG_4706.jpeg" },
+  { name: "IMG_4707.jpeg", url: "files/img/IMG_4707.jpeg" },
+  { name: "IMG_4708.jpeg", url: "files/img/IMG_4708.jpeg" },
+  { name: "IMG_4709.jpeg", url: "files/img/IMG_4709.jpeg" },
+  { name: "IMG_4710.jpeg", url: "files/img/IMG_4710.jpeg" },
+  { name: "IMG_4711.jpeg", url: "files/img/IMG_4711.jpeg" },
+  { name: "IMG_4712.jpeg", url: "files/img/IMG_4712.jpeg" },
+  { name: "IMG_4713.jpeg", url: "files/img/IMG_4713.jpeg" },
+  { name: "IMG_4714.jpeg", url: "files/img/IMG_4714.jpeg" },
+  { name: "IMG_4715.jpeg", url: "files/img/IMG_4715.jpeg" },
+  { name: "IMG_4716.jpeg", url: "files/img/IMG_4716.jpeg" },
+  { name: "IMG_4717.jpeg", url: "files/img/IMG_4717.jpeg" },
+  { name: "IMG_4718.jpeg", url: "files/img/IMG_4718.jpeg" },
+  { name: "IMG_4719.jpeg", url: "files/img/IMG_4719.jpeg" },
+  { name: "IMG_4720.jpeg", url: "files/img/IMG_4720.jpeg" },
+  { name: "IMG_4721.jpeg", url: "files/img/IMG_4721.jpeg" },
+  { name: "IMG_4722.jpeg", url: "files/img/IMG_4722.jpeg" },
+  { name: "IMG_4723.jpeg", url: "files/img/IMG_4723.jpeg" },
+  { name: "IMG_4724.jpeg", url: "files/img/IMG_4724.jpeg" },
+  { name: "IMG_4725.jpeg", url: "files/img/IMG_4725.jpeg" },
+  { name: "IMG_4726.jpeg", url: "files/img/IMG_4726.jpeg" },
+  { name: "IMG_4727.jpeg", url: "files/img/IMG_4727.jpeg" },
+  { name: "IMG_4728.jpeg", url: "files/img/IMG_4728.jpeg" },
+  { name: "IMG_4729.jpeg", url: "files/img/IMG_4729.jpeg" },
+  { name: "IMG_4730.jpeg", url: "files/img/IMG_4730.jpeg" },
+  { name: "IMG_4731.jpeg", url: "files/img/IMG_4731.jpeg" },
+  { name: "IMG_4732.jpeg", url: "files/img/IMG_4732.jpeg" },
+  { name: "IMG_4733.jpeg", url: "files/img/IMG_4733.jpeg" },
+  { name: "IMG_4734.jpeg", url: "files/img/IMG_4734.jpeg" },
+  { name: "IMG_4735.jpeg", url: "files/img/IMG_4735.jpeg" },
+  { name: "IMG_4736.jpeg", url: "files/img/IMG_4736.jpeg" },
+  { name: "IMG_4737.jpeg", url: "files/img/IMG_4737.jpeg" },
+  { name: "IMG_4738.jpeg", url: "files/img/IMG_4738.jpeg" },
+  { name: "IMG_4739.jpeg", url: "files/img/IMG_4739.jpeg" },
+  { name: "IMG_4740.jpeg", url: "files/img/IMG_4740.jpeg" },
+  { name: "IMG_4741.jpeg", url: "files/img/IMG_4741.jpeg" },
+  { name: "IMG_4742.jpeg", url: "files/img/IMG_4742.jpeg" },
+  { name: "IMG_4743.jpeg", url: "files/img/IMG_4743.jpeg" },
+  { name: "IMG_4744.jpeg", url: "files/img/IMG_4744.jpeg" },
+  { name: "IMG_4745.jpeg", url: "files/img/IMG_4745.jpeg" },
+  { name: "IMG_4746.jpeg", url: "files/img/IMG_4746.jpeg" },
+  { name: "IMG_4747.jpeg", url: "files/img/IMG_4747.jpeg" },
+  { name: "IMG_4748.jpeg", url: "files/img/IMG_4748.jpeg" },
+  { name: "IMG_4749.jpeg", url: "files/img/IMG_4749.jpeg" },
+  { name: "IMG_4750.jpeg", url: "files/img/IMG_4750.jpeg" },
+  { name: "IMG_4751.jpeg", url: "files/img/IMG_4751.jpeg" },
+  { name: "IMG_4752.jpeg", url: "files/img/IMG_4752.jpeg" },
+  { name: "IMG_4753.jpeg", url: "files/img/IMG_4753.jpeg" },
+  { name: "IMG_4754.jpeg", url: "files/img/IMG_4754.jpeg" },
+  { name: "IMG_4755.jpeg", url: "files/img/IMG_4755.jpeg" },
+  { name: "IMG_4756.jpeg", url: "files/img/IMG_4756.jpeg" },
+  { name: "IMG_4757.jpeg", url: "files/img/IMG_4757.jpeg" },
+  { name: "IMG_4758.jpeg", url: "files/img/IMG_4758.jpeg" },
+  { name: "IMG_4759.jpeg", url: "files/img/IMG_4759.jpeg" },
+  { name: "IMG_4760.jpeg", url: "files/img/IMG_4760.jpeg" },
+  { name: "IMG_4761.jpeg", url: "files/img/IMG_4761.jpeg" },
+  { name: "IMG_4762.jpeg", url: "files/img/IMG_4762.jpeg" },
+  { name: "IMG_4763.jpeg", url: "files/img/IMG_4763.jpeg" },
+  { name: "IMG_4764.jpeg", url: "files/img/IMG_4764.jpeg" },
+  { name: "IMG_4765.jpeg", url: "files/img/IMG_4765.jpeg" },
+  { name: "IMG_4766.jpeg", url: "files/img/IMG_4766.jpeg" },
+  { name: "IMG_4767.jpeg", url: "files/img/IMG_4767.jpeg" },
+  { name: "IMG_4768.jpeg", url: "files/img/IMG_4768.jpeg" },
+  { name: "IMG_4769.jpeg", url: "files/img/IMG_4769.jpeg" },
+  { name: "IMG_4770.jpeg", url: "files/img/IMG_4770.jpeg" },
+  { name: "IMG_4771.jpeg", url: "files/img/IMG_4771.jpeg" },
+  { name: "IMG_4772.jpeg", url: "files/img/IMG_4772.jpeg" },
+  { name: "IMG_4773.jpeg", url: "files/img/IMG_4773.jpeg" },
+  { name: "IMG_4774.jpeg", url: "files/img/IMG_4774.jpeg" },
+  { name: "IMG_4775.jpeg", url: "files/img/IMG_4775.jpeg" },
+  { name: "IMG_4776.jpeg", url: "files/img/IMG_4776.jpeg" },
+  { name: "IMG_4777.jpeg", url: "files/img/IMG_4777.jpeg" },
+  { name: "IMG_4778.jpeg", url: "files/img/IMG_4778.jpeg" },
+  { name: "IMG_4779.jpeg", url: "files/img/IMG_4779.jpeg" },
+  { name: "IMG_4780.jpeg", url: "files/img/IMG_4780.jpeg" },
+  { name: "IMG_4781.jpeg", url: "files/img/IMG_4781.jpeg" },
+  { name: "IMG_4782.jpeg", url: "files/img/IMG_4782.jpeg" },
+  { name: "IMG_4783.jpeg", url: "files/img/IMG_4783.jpeg" },
+  { name: "IMG_4784.jpeg", url: "files/img/IMG_4784.jpeg" },
+  { name: "IMG_4785.jpeg", url: "files/img/IMG_4785.jpeg" },
+  { name: "IMG_4786.jpeg", url: "files/img/IMG_4786.jpeg" },
+  { name: "IMG_4787.jpeg", url: "files/img/IMG_4787.jpeg" },
+  { name: "IMG_4788.jpeg", url: "files/img/IMG_4788.jpeg" },
+  { name: "IMG_4789.jpeg", url: "files/img/IMG_4789.jpeg" },
+  { name: "IMG_4790.jpeg", url: "files/img/IMG_4790.jpeg" },
+  { name: "IMG_4791.jpeg", url: "files/img/IMG_4791.jpeg" },
+  { name: "IMG_4792.jpeg", url: "files/img/IMG_4792.jpeg" },
+  { name: "IMG_4793.jpeg", url: "files/img/IMG_4793.jpeg" },
+  { name: "IMG_4794.jpeg", url: "files/img/IMG_4794.jpeg" },
+  { name: "IMG_4795.jpeg", url: "files/img/IMG_4795.jpeg" },
+  { name: "IMG_4796.jpeg", url: "files/img/IMG_4796.jpeg" },
+  { name: "IMG_4797.jpeg", url: "files/img/IMG_4797.jpeg" },
+  { name: "IMG_4798.jpeg", url: "files/img/IMG_4798.jpeg" },
+  { name: "IMG_4799.jpeg", url: "files/img/IMG_4799.jpeg" },
+  { name: "IMG_4800.jpeg", url: "files/img/IMG_4800.jpeg" },
+  { name: "IMG_4801.jpeg", url: "files/img/IMG_4801.jpeg" },
+  { name: "IMG_4802.jpeg", url: "files/img/IMG_4802.jpeg" },
+  { name: "IMG_4803.jpeg", url: "files/img/IMG_4803.jpeg" },
+  { name: "IMG_4804.jpeg", url: "files/img/IMG_4804.jpeg" }
       ]
+
+
+
+
+
+
+
+
+
     };
 
     const folderSection = document.getElementById('folder-section');
     const fileSection = document.getElementById('file-list-section');
     const fileContainer = document.getElementById('file-container');
     const fileTitle = document.getElementById('file-title');
-    const searchInput = document.getElementById('searchInput');
     const pdfCount = document.getElementById('pdf-count');
     const docCount = document.getElementById('doc-count');
+
+    // Optional unused elements
     const imageSection = document.getElementById('image-section');
     const imageInput = document.getElementById('imageInput');
     const imageContainer = document.getElementById('image-container');
 
-    // Show counts
     pdfCount.textContent = `${files.pdf.length} Files`;
     docCount.textContent = `${files.doc.length} Files`;
 
     let currentType = '';
     let currentList = [];
+    let currentImageIndex = 0;
 
     function openFolder(type) {
       currentType = type;
@@ -116,10 +393,9 @@
       fileTitle.innerText = type.toUpperCase() + ' Files';
       renderFiles(currentList);
 
-      // Show image section only if "images" folder is selected
-      if (type === 'images') {
+      if (type === 'images' && imageSection) {
         imageSection.classList.remove('hidden');
-      } else {
+      } else if (imageSection) {
         imageSection.classList.add('hidden');
       }
     }
@@ -130,16 +406,47 @@
         fileContainer.innerHTML = '<p class="text-gray-300">No files found.</p>';
         return;
       }
-      list.forEach((file) => {
+
+      list.forEach((file, index) => {
         const card = document.createElement('div');
         card.className = 'file-card glass p-5 rounded-xl flex flex-col justify-between';
+
+        const icon =
+          currentType === 'pdf' ? '📄' :
+          currentType === 'doc' ? '📝' :
+          '🖼️';
+
+        let actionButton = '';
+
+        if (currentType === 'images') {
+          actionButton = `
+            <button onclick="openImageViewer(${index})"
+              class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">
+              View
+            </button>
+          `;
+        } else if (currentType === 'pdf') {
+          actionButton = `
+            <button onclick="openPdfViewer('${file.url}')"
+              class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">
+              View
+            </button>
+          `;
+        } else {
+          actionButton = `
+            <a href="${file.url}" target="_blank" rel="noopener noreferrer"
+               class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">
+              View
+            </a>
+          `;
+        }
+
         card.innerHTML = `
           <div class="flex items-center mb-3">
-            <span class="text-3xl mr-3">${currentType === 'pdf' ? '📄' : currentType === 'doc' ? '📝' : '🖼️'}</span>
+            <span class="text-3xl mr-3">${icon}</span>
             <p class="font-medium text-white truncate" title="${file.name}">${file.name}</p>
           </div>
-          <a href="${file.url}" target="_blank" rel="noopener noreferrer"
-             class="text-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-purple-600 hover:to-pink-500 px-4 py-2 rounded-lg mt-3 font-medium">View</a>
+          ${actionButton}
         `;
         fileContainer.appendChild(card);
       });
@@ -148,32 +455,77 @@
     function goBack() {
       fileSection.classList.add('hidden');
       folderSection.classList.remove('hidden');
-      searchInput.value = '';
       currentType = '';
       currentList = [];
+      closeImageViewer();
+      closePdfViewer();
     }
 
-    // Search functionality — only when a folder is open
-    searchInput.addEventListener('input', () => {
-      if (!currentType) return; // guard until a folder is selected
-      const q = searchInput.value.trim().toLowerCase();
-      const filtered = q ? currentList.filter(f => f.name.toLowerCase().includes(q)) : currentList;
-      renderFiles(filtered);
-    });
-
-    // Image upload functionality
-    imageInput.addEventListener('change', function(event) {
-      const files = event.target.files;
-      if (files) {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const img = document.createElement('img');
-          img.src = URL.createObjectURL(file);
-          img.className = 'w-32 h-32 object-cover rounded-lg';
-          imageContainer.appendChild(img);
+    if (imageInput) {
+      imageInput.addEventListener('change', function(event) {
+        const filesUp = event.target.files;
+        if (filesUp && imageContainer) {
+          for (let i = 0; i < filesUp.length; i++) {
+            const file = filesUp[i];
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.className = 'w-32 h-32 object-cover rounded-lg';
+            imageContainer.appendChild(img);
+          }
         }
-      }
-    });
+      });
+    }
+
+    // Image viewer logic
+    function openImageViewer(index) {
+      if (!currentList || !currentList[index]) return;
+      currentImageIndex = index;
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = currentList[currentImageIndex].url;
+      modal.classList.remove('hidden');
+    }
+
+    function closeImageViewer() {
+      const modal = document.getElementById('imageModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function showPrevImage() {
+      if (!currentList || !currentList.length) return;
+      currentImageIndex = (currentImageIndex - 1 + currentList.length) % currentList.length;
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = currentList[currentImageIndex].url;
+    }
+
+    function showNextImage() {
+      if (!currentList || !currentList.length) return;
+      currentImageIndex = (currentImageIndex + 1) % currentList.length;
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = currentList[currentImageIndex].url;
+    }
+
+    // PDF viewer logic
+    function openPdfViewer(url) {
+      const modal = document.getElementById('pdfModal');
+      const frame = document.getElementById('pdfFrame');
+      frame.src = url;
+      modal.classList.remove('hidden');
+    }
+
+    function closePdfViewer() {
+      const modal = document.getElementById('pdfModal');
+      const frame = document.getElementById('pdfFrame');
+      if (frame) frame.src = '';
+      if (modal) modal.classList.add('hidden');
+    }
+
+    window.openImageViewer = openImageViewer;
+    window.closeImageViewer = closeImageViewer;
+    window.showPrevImage = showPrevImage;
+    window.showNextImage = showNextImage;
+    window.openPdfViewer = openPdfViewer;
+    window.closePdfViewer = closePdfViewer;
   </script>
 </body>
 </html>
